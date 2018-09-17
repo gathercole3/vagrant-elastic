@@ -1,0 +1,38 @@
+version: '2.0'
+services:
+  elasticsearch_hq:
+    image: elastichq/elasticsearch-hq:release-v3.4.1
+    ports:
+      - "5000:5000"
+    environment:
+      - HQ_DEFAULT_URL=http://es_master:9200
+    networks:
+      - esnet
+
+  es_master:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+    environment:
+      - cluster.name=docker-cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - esnet
+
+  es_node:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+    ports:
+      - "9200:9200"
+    environment:
+      - cluster.name=docker-cluster
+      - "discovery.zen.ping.unicast.hosts=es_master"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - esnet
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+
+networks:
+  esnet:
