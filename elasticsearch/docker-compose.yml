@@ -11,10 +11,20 @@ services:
 
   es_master:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+    environment:
+      - cluster.name=docker-cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - esnet
+
+  es_node:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
     ports:
       - "9200:9200"
     environment:
-      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - "discovery.zen.ping.unicast.hosts=es_master"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - esnet
 
