@@ -28,6 +28,26 @@ services:
     networks:
       - esnet
 
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.4.0
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://es_master:9200
+    networks:
+      - esnet
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:6.4.0
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /vagrant/app/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+    environment:
+      - ES_HOSTS=192.168.56.101
+    command: ["--strict.perms=false", "-system.hostfs=/hostfs"]
+    
 volumes:
   esdata1:
     driver: local

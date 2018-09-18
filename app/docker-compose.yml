@@ -1,0 +1,12 @@
+version: "2.0"
+services:
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:6.4.0
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /vagrant/app/metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+    environment:
+      - ES_HOSTS=192.168.56.101
+    command: ["--strict.perms=false", "-system.hostfs=/hostfs"]

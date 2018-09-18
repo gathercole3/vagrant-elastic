@@ -12,6 +12,7 @@ Vagrant.configure(2) do |config|
 
     elastic.vm.network "forwarded_port", guest: 9200, host: 9200
     elastic.vm.network "forwarded_port", guest: 5000, host: 5000
+    elastic.vm.network "forwarded_port", guest: 5601, host: 5601
 
     # this setting is required for elasticsearch to run
     elastic.vm.provision "shell", inline: "echo 'vm.max_map_count=262144' >> /etc/sysctl.conf"
