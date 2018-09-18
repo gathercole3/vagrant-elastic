@@ -1,0 +1,21 @@
+# filebeat.yml
+
+filebeat.inputs:
+- type: docker
+  containers:
+    path: '/usr/share/filebeat/dockerlogs'
+    stream: "stdout"
+    ids:
+      - "*"
+
+processors:
+- add_docker_metadata:
+
+output.elasticsearch:
+  hosts: '${ES_HOSTS}'
+  username: elastic
+  password: changeme
+
+# Write Filebeat own logs only to file to avoid catching them with itself in docker log files
+logging.to_files: true
+logging.to_syslog: false
